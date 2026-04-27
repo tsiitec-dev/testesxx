@@ -1,0 +1,440 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary-green: #059669;
+    --primary-dark: #064e3b;
+    --secondary-green: #ecfdf5;
+    --accent: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --bg-body: #f1f5f9;
+    --white: #ffffff;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+}
+
+body.layout-app {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ================= BARRAS DE ROLAGEM (SCROLLBAR) ================= */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+.scroll-box { overflow-y: auto; overflow-x: hidden; padding-right: 5px; }
+
+/* ================= BARRA LATERAL (SIDEBAR) ================= */
+.sidebar {
+    width: 280px;
+    background: var(--primary-dark);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header { padding: 0 25px 30px; text-align: center; }
+.sidebar-header img { width: 100px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+
+.sidebar a {
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin: 4px 15px;
+    border-radius: 8px;
+}
+
+.sidebar a i { font-size: 1.1em; width: 25px; text-align: center; }
+.sidebar a:hover { background: rgba(255,255,255,0.05); color: #f8fafc; transform: translateX(5px); }
+.sidebar a.active { background: var(--primary-green); color: white; box-shadow: var(--shadow-sm); }
+
+/* ================= CONTEÚDO PRINCIPAL ================= */
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 30px 40px;
+    max-width: calc(100% - 280px);
+    transition: margin-left 0.3s ease;
+}
+
+/* ================= TOPBAR & NOTIFICAÇÕES ================= */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--white);
+    padding: 15px 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+.topbar-right strong { display: flex; align-items: center; gap: 8px; color: var(--primary-dark); font-weight: 700; }
+
+.btn-notif {
+    background: #f1f5f9;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2em;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    border-radius: 50%;
+    transition: 0.2s;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-notif:hover { background: #e2e8f0; color: var(--text-main); }
+.btn-notif.tem-alerta { color: var(--danger); animation: sino 2s infinite ease-in-out; }
+
+.badge-notif {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.65em;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 10px;
+    border: 2px solid white;
+}
+
+.dropdown-notif {
+    display: none;
+    position: absolute;
+    top: 75px;
+    right: 30px;
+    background: var(--white);
+    width: 320px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    border: 1px solid #e2e8f0;
+    z-index: 1000;
+    flex-direction: column;
+    overflow: hidden;
+}
+.dropdown-notif.show { display: flex; animation: slideDown 0.2s ease-out; }
+.notif-header { padding: 15px; background: #f8fafc; font-weight: 700; border-bottom: 1px solid #e2e8f0; color: var(--primary-dark); }
+.notif-item { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #f1f5f9; align-items: flex-start; }
+.notif-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
+
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sino { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+
+/* ================= CARTÕES E ESTATÍSTICAS ================= */
+.stat-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+
+/* ================= BOTÕES, INPUTS E FORMULÁRIOS ================= */
+.btn {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+.btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2); }
+
+input, select, textarea {
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-size: 0.95em;
+    color: var(--text-main);
+}
+input:focus, select:focus, textarea:focus { 
+    border-color: var(--accent); 
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); 
+}
+
+/* Transição suave para o ícone de sanfona (setinha para abrir/fechar) */
+.seta { transition: transform 0.3s ease; }
+.fa-chevron-up.seta { transform: rotate(180deg); }
+
+/* ================= TABELAS MODERNAS ================= */
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+th {
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+}
+td { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+tbody tr { transition: background 0.2s ease; }
+tbody tr:hover { background: #f8fafc; }
+
+
+/* ================= ESTILOS GLOBAIS: BADGES, KANBAN E BUSCA ================= */
+
+/* Distintivo Online com Animação */
+.badge-online { 
+    background: #dcfce7; 
+    color: #15803d; 
+    border-radius: 20px; 
+    padding: 6px 15px; 
+    font-size: 0.85rem; 
+    font-weight: bold; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px;
+    animation: pulse 2s infinite;
+}
+
+/* Quadro Kanban (Colunas e Cartões) */
+.kanban-board { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 20px; 
+    margin-top: 20px; 
+}
+.kanban-col { 
+    background: #f8fafc; 
+    border-radius: 20px; 
+    padding: 20px; 
+    border: 2px solid #e2e8f0; 
+    height: 55vh; 
+    min-height: 450px; 
+    display: flex; 
+    flex-direction: column; 
+}
+.kanban-col h3 { 
+    font-size: 1.15rem; 
+    font-weight: 800; 
+    text-align: center; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #cbd5e1; 
+    padding-bottom: 15px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.os-card { 
+    background: white; 
+    border-radius: 15px; 
+    padding: 18px; 
+    margin-bottom: 15px; 
+    box-shadow: var(--shadow); 
+    border-left: 6px solid #64748b; 
+    position: relative; 
+}
+.os-title { 
+    font-size: 1.1rem; 
+    font-weight: 800; 
+    color: var(--primary-dark); 
+    margin-bottom: 8px; 
+    line-height: 1.4; 
+}
+.os-meta { 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-bottom: 4px; 
+}
+
+/* Modificadores de Cores para Cards Kanban */
+.os-card.pendente, .os-card.aguardando { border-left-color: var(--warning); }
+.os-card.executando { border-left-color: #3b82f6; }
+.os-card.concluido, .os-card.aceita { border-left-color: var(--primary-green); }
+.os-card.recusada { border-left-color: var(--danger); opacity: 0.8; }
+
+/* Botões de Ação dos Cartões Kanban */
+.btn-delete { 
+    background: none; 
+    border: none; 
+    color: #cbd5e1; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    font-size: 1rem; 
+}
+.btn-delete:hover { 
+    color: var(--danger); 
+}
+.card-actions { 
+    display: flex; 
+    gap: 8px; 
+    margin-top: 15px; 
+    border-top: 1px dashed #eee; 
+    padding-top: 12px; 
+}
+.btn-status { 
+    flex: 1; 
+    padding: 8px; 
+    border-radius: 8px; 
+    border: none; 
+    font-weight: 700; 
+    font-size: 0.8rem; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 5px; 
+    color: #fff; 
+    transition: 0.2s; 
+}
+.btn-voltar-status { 
+    background: #f1f5f9; 
+    color: #64748b; 
+    border: 1px solid #e2e8f0; 
+}
+.btn-voltar-status:hover { 
+    background: #e2e8f0; 
+}
+
+/* Barra de Pesquisa do Histórico e Geral */
+#buscaHistorico, #buscaEstoque { 
+    padding: 10px 15px; 
+    border-radius: 10px; 
+    border: 2px solid #cbd5e1; 
+    font-size: 1rem; 
+    width: 300px; 
+    outline: none; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#buscaHistorico:focus, #buscaEstoque:focus { 
+    border-color: var(--primary-green); 
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1); 
+}
+
+
+/* =========================================
+   BOTÕES DE AÇÃO DOS CARTÕES (Modernos)
+   ========================================= */
+.btn-action {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
+}
+
+/* Ação Vermelha (Registrar Troca / Vencido) */
+.btn-action-urgente {
+    color: var(--danger);
+    border-color: #fca5a5;
+}
+.btn-action-urgente:hover {
+    background-color: var(--danger);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Ação Amarela (Agendar Troca / Atenção) */
+.btn-action-atencao {
+    color: #d97706; 
+    border-color: #fcd34d;
+}
+.btn-action-atencao:hover {
+    background-color: var(--warning);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Ação Cinza (Corrigir Data / Seguro) */
+.btn-action-normal {
+    color: var(--text-muted);
+    border-color: #cbd5e1;
+}
+.btn-action-normal:hover {
+    background-color: var(--text-muted);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(100, 116, 139, 0.25);
+    transform: translateY(-1px);
+}
+
+
+/* ================= RESPONSIVIDADE (MOBILE) ================= */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: var(--primary-dark);
+    cursor: pointer;
+}
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .content { margin-left: 0; padding: 20px; max-width: 100%; }
+    .hamburger { display: block; }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+    .stat-card { padding: 15px; }
+    .kanban-board { grid-template-columns: 1fr; }
+    #buscaHistorico, #buscaEstoque { width: 100%; }
+}
